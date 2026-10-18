@@ -70,11 +70,3 @@ if user_input := st.chat_input("Écris ton message ici..."):
     st.session_state.messages.append({"role": "assistant", "content": reply})
 import streamlit as st
 
-# Menu latéral avec le logo du club
-with st.sidebar:
-    st.image("https://raw.githubusercontent.com/VOTRE_PSEUDO/chatbot-mains-solidaires/main/logo.png", use_container_width=True)
-    
-    st.header("⚙️ Options")
-    if st.button("🗑️ Effacer la conversation"):
-        st.session_state.messages = []
-        st.rerun()
