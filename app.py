@@ -1,12 +1,14 @@
 import streamlit as st
 from google import genai
 
+
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
 except Exception:
     api_key = "AQ.Ab8RN6KxA1KDv-RoHuop7_dWpPFg29R411iAW58uMZmdFpk6Hg"
 
 client = genai.Client(api_key=api_key)
+
 
 st.title("🎓 Chatbot du Club Les mains solidaires")
 st.write("Bienvenue ! Posez vos questions sur le club, les événements ou les inscriptions.")
@@ -48,11 +50,15 @@ if user_input := st.chat_input("Écris ton message ici..."):
 
     prompt_context = f"Tu es le chatbot officiel du club 'Les mains solidaires'. Voici les informations : {infos_club}. Réponds de manière courte et sympathique à : {user_input}. IMPORTANT : Si tu mentionnes l'adresse email d'inscription, affiche-la sous forme de lien cliquable [inscription@mainssolidaires.ma](mailto:inscription@mainssolidaires.ma)."
 
-    response = client.models.generate_content(
-        model="gemini-3.8-flash",
-        contents=prompt_context,
-    )
+    try:
+        response = client.models.generate_content(
+            model="gemini-3.8-flash",
+            contents=prompt_context,
+        )
+        reply = response.text
+    except Exception as e:
+        reply = f"⚠️ Erreur lors de la génération : {e}"
 
     with st.chat_message("assistant"):
-        st.markdown(response.text)
-    st.session_state.messages.append({"role": "assistant", "content": response.text})
+        st.markdown(reply)
+    st.session_state.messages.append({"role": "assistant", "content": reply})
