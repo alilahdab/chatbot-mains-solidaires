@@ -1,20 +1,21 @@
 import streamlit as st
 from google import genai
 
-
+# 1. Configuration avec votre clé API
 client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
 
+# 2. Interface Graphique
 st.title("🎓 Chatbot du Club Les mains solidaires")
 st.write("Bienvenue ! Posez vos questions sur le club, les événements ou les inscriptions.")
 
-
+# Menu latéral pour réinitialiser la discussion
 with st.sidebar:
     st.header("⚙️ Options")
     if st.button("🗑️ Effacer la conversation"):
         st.session_state.messages = []
         st.rerun()
 
-
+# 3. Informations du club
 NOUVELLE_EMAIL = "mainssolidaires.inscription@gmail.com"
 
 infos_club = f"""
@@ -32,7 +33,7 @@ Informations sur le club :
 - General secretariat : Benryahi Nouhaida
 """
 
-
+# 4. Historique du Chat
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -40,17 +41,21 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-
+# 5. Question de l'étudiant et réponse de l'IA
 if user_input := st.chat_input("Écris ton message ici..."):
     st.chat_message("user").markdown(user_input)
     st.session_state.messages.append({"role": "user", "content": user_input})
 
-    prompt_context = f"Tu es le chatbot officiel du club 'Les mains solidaires'. Voici les informations : {infos_club}. Réponds de manière courte et sympathique à : {user_input}. IMPORTANT : Si tu mentionnes l'adresse email d'inscription ({mainssolidaires.inscription@gmail.com}), affiche-la toujours comme un vrai lien cliquable (ex: [{mainssolidaires.inscription@gmail.com}](mailto:{mainssolidaires.inscription@gmail.com}))."
+    prompt_context = f"Tu es le chatbot officiel du club 'Les mains solidaires'. Voici les informations : {infos_club}. Réponds de manière courte et sympathique à : {user_input}. IMPORTANT : Si tu mentionnes l'adresse email d'inscription ({NOUVELLE_EMAIL}), affiche-la toujours comme un vrai lien cliquable (ex: [{NOUVELLE_EMAIL}](mailto:{NOUVELLE_EMAIL}))."
 
     response = client.models.generate_content(
         model="gemini-3.8-flash",
         contents=prompt_context,
     )
+
+    with st.chat_message("assistant"):
+        st.markdown(response.text)
+    st.session_state.messages.append({"role": "assistant", "content": response.text})
 
     with st.chat_message("assistant"):
         st.markdown(response.text)
