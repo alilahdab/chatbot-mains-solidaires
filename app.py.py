@@ -68,4 +68,5 @@ if user_input := st.chat_input("Écris ton message ici..."):
     with st.chat_message("assistant"):
         st.markdown(reply)
     st.session_state.messages.append({"role": "assistant", "content": reply})
-
+# Affiche le logo en haut du menu latéral
+st.sidebar.image("837537349_18122660476803841_3555765525454950004_n", width=200) 
