@@ -1,7 +1,7 @@
 import streamlit as st
 from google import genai
 
-# Configuration de la clé API via Secrets ou valeur par défaut
+
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
 except Exception:
@@ -9,7 +9,7 @@ except Exception:
 
 client = genai.Client(api_key=api_key)
 
-# Interface utilisateur
+
 st.title("🎓 Chatbot du Club Les mains solidaires")
 st.write("Bienvenue ! Posez vos questions sur le club, les événements ou les inscriptions.")
 
@@ -47,7 +47,7 @@ if user_input := st.chat_input("Écris ton message ici..."):
 
     prompt_context = f"Tu es le chatbot officiel du club 'Les mains solidaires'. Voici les informations : {infos_club}. Réponds de manière courte et sympathique à : {user_input}. IMPORTANT : Si tu mentionnes l'adresse email d'inscription, affiche-la sous forme de lien cliquable [inscription@mainssolidaires.ma](mailto:inscription@mainssolidaires.ma)."
 
-    # Tentative sur le modèle principal
+
     try:
         response = client.models.generate_content(
             model="gemini-3.8-flash",
@@ -55,7 +55,7 @@ if user_input := st.chat_input("Écris ton message ici..."):
         )
         reply = response.text
     except Exception as e1:
-        # Repli automatique sur un modèle de secours en cas de limite atteinte
+      
         try:
             response = client.models.generate_content(
                 model="gemini-2.5-flash",
