@@ -2,7 +2,7 @@ import streamlit as st
 from google import genai
 
 # 1. Configuration avec votre clé API
-client = genai.Client(api_key="AQ.Ab8RN6KxA1KDv-RoHuop7_dWpPFg29R411iAW58uMZmdFpk6Hg")
+client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
 
 # 2. Interface Graphique
 st.title("🎓 Chatbot du Club Les mains solidaires")
