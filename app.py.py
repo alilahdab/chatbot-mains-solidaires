@@ -1,37 +1,58 @@
 import streamlit as st
-import google.generativeai as genai
+from google import genai
 
-# 1. Configuration de l'IA (Remplace par ta clé API Gemini)
-# Tu peux en obtenir une gratuitement sur Google AI Studio
-genai.configure(api_key="TA_CLE_API_ICI")
-model = genai.GenerativeModel('gemini-pro')
+# 1. Configuration avec votre clé API
+client = genai.Client(api_key="AQ.Ab8RN6KxA1KDv-RoHuop7_dWpPFg29R411iAW58uMZmdFpk6Hg")
 
-# 2. Interface Graphique (GUI)
-st.title("🎓 Chatbot du Club Les mains solidaires ")
-st.write("Bienvenue ! Pose tes questions sur le club, les événements ou les inscriptions.")
+# 2. Interface Graphique
+st.title("🎓 Chatbot du Club Les mains solidaires")
+st.write("Bienvenue ! Posez vos questions sur le club, les événements ou les inscriptions.")
 
-# 3. Gestion de l'historique de conversation
+# Menu latéral pour réinitialiser la discussion
+with st.sidebar:
+    st.header("⚙️ Options")
+    if st.button("🗑️ Effacer la conversation"):
+        st.session_state.messages = []
+        st.rerun()
+
+# 3. Informations du club
+NOUVELLE_EMAIL = "mainssolidaires.inscription@gmail.com"
+
+infos_club = f"""
+Informations sur le club :
+- Nom : Les mains solidaires
+- Mission : Organisation caritative pour aider les étudiants et la communauté locale.
+- Inscriptions : Elles sont ouvertes ! Il faut envoyer un mail à mainssolidaires.inscription@gmail.com 
+- Président : Alae Zirari
+- Vice président : Zahra Kaddour
+- HR Manager : Nada Hammad
+- Evenements manager : Ali Lahdab
+- Media team : Douae Rais & Hidaya Zouhini
+- Communication manager : Youssef El Aouni
+- Treasurer : Nada El Ouardi
+- General secretariat : Benryahi Nouhaida
+"""
+
+# 4. Historique du Chat
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Afficher les anciens messages
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-# 4. Zone de saisie pour l'étudiant
+# 5. Question de l'étudiant et réponse de l'IA
 if user_input := st.chat_input("Écris ton message ici..."):
-    # Afficher la question de l'utilisateur
     st.chat_message("user").markdown(user_input)
     st.session_state.messages.append({"role": "user", "content": user_input})
 
-    # On donne des consignes à l'IA pour qu'elle sache qu'elle représente le club
-    prompt_context = f"Tu es le chatbot officiel et très sympa d'un club universitaire. Réponds de manière courte et dynamique à cette question d'un étudiant : {user_input}"
+    prompt_context = f"Tu es le chatbot officiel du club 'Les mains solidaires'. Voici les informations : {infos_club}. Réponds de manière courte et sympathique à : {user_input}. IMPORTANT : Si tu mentionnes l'adresse email d'inscription ({NOUVELLE_EMAIL}), affiche-la toujours comme un vrai lien cliquable (ex: [{NOUVELLE_EMAIL}](mailto:{NOUVELLE_EMAIL}))."
 
-    # Demander la réponse à l'IA
-    response = model.generate_content(prompt_context)
+    response = client.models.generate_content(
+        model="gemini-3.8-flash",
+        contents=prompt_context,
+    )
 
-    # Afficher la réponse
     with st.chat_message("assistant"):
         st.markdown(response.text)
     st.session_state.messages.append({"role": "assistant", "content": response.text})
