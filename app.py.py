@@ -45,7 +45,7 @@ if user_input := st.chat_input("Écris ton message ici..."):
     st.chat_message("user").markdown(user_input)
     st.session_state.messages.append({"role": "user", "content": user_input})
 
-    prompt_context = f"Tu es le chatbot officiel du club 'Les mains solidaires'. Voici les informations : {infos_club}. Réponds de manière courte et sympathique à : {user_input}. IMPORTANT : Si tu mentionnes l'adresse email d'inscription ({NOUVELLE_EMAIL}), affiche-la toujours comme un vrai lien cliquable (ex: [{NOUVELLE_EMAIL}](mailto:{NOUVELLE_EMAIL}))."
+    prompt_context = f"Tu es le chatbot officiel du club 'Les mains solidaires'. Voici les informations : {infos_club}. Réponds de manière courte et sympathique à : {user_input}. IMPORTANT : Si tu mentionnes l'adresse email d'inscription ({mainssolidaires.inscription@gmail.com}), affiche-la toujours comme un vrai lien cliquable (ex: [{mainssolidaires.inscription@gmail.com}](mailto:{mainssolidaires.inscription@gmail.com}))."
 
     response = client.models.generate_content(
         model="gemini-3.8-flash",
