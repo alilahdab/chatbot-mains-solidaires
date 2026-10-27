@@ -5,7 +5,7 @@ from google import genai
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
 except Exception:
-    api_key = "AQ.Ab8RN6KxA1KDv-RoHuop7_dWpPFg29R411iAW58uMZmdFpk6Hg"
+    api_key = "AQ.Ab8RN6J60Y93hRl0rLWeQxFvaRbKm7A3hUuT0c_-EfQexKcv8A"
 
 client = genai.Client(api_key=api_key)
 
